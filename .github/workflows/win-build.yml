@@ -59,7 +59,7 @@ jobs:
             echo "::error::Failure during Build"
             exit 1
           }
-      - name: Run Tests
+      - name: Run Tests with address sanitizer
         run: |
           make test-classic | tee out-classic.txt
           make test-ttk | tee out-ttk.txt
