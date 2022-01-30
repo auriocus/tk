@@ -28,6 +28,9 @@ jobs:
           touch "${HOME}/forWinDialog-5.12.7"
           mkdir "${HOME}/install_dir"
           echo "INSTALL_DIR=${HOME}/install_dir" >> $GITHUB_ENV
+          echo "CFLAGS=\"-g -fsanitize=address\"" >> $GITHUB_ENV
+          echo "LIBS=\"-fsanitize=address\"" >> $GITHUB_ENV
+          echo "CC=clang"  >> $GITHUB_ENV
         working-directory: generic
       - name: Configure and Build Tcl
         run: |
@@ -42,7 +45,7 @@ jobs:
           }
           echo "TCL_CONFIG_PATH=`pwd`" >> $GITHUB_ENV
         env:
-          CFGOPT: CC=clang CFLAGS="-g -fsanitize=address" LIBS="-fsanitize=address" --enable-64bit --enable-symbols=${{ matrix.symbols }}
+          CFGOPT: --enable-64bit --enable-symbols=${{ matrix.symbols }}
         working-directory: tcl/win
       - name: Configure (symbols=${{ matrix.symbols }})
         run: |
@@ -52,7 +55,7 @@ jobs:
             exit 1
           }
         env:
-          CFGOPT: CC=clang CFLAGS="-g -fsanitize=address" LIBS="-fsanitize=address" --enable-64bit --enable-symbols=${{ matrix.symbols }}
+          CFGOPT: --enable-64bit --enable-symbols=${{ matrix.symbols }}
       - name: Build
         run: |
           make all tktest || {
